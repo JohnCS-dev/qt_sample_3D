@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/BaseShaders">
+        <file>Lib/base_fsh.frag</file>
+        <file>Lib/base_vsh.vert</file>
+    </qresource>
+</RCC>
