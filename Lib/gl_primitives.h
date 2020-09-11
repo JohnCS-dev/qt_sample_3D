@@ -103,6 +103,7 @@ public:
     Primitive * addSimpleArrow(const int segments, const float height, const float arrowHeight, const float radius, QVector3D direction = QVector3D(0.0f, 0.0f, 1.0f));
 
 private:
+    PrimitiveManager( const PrimitiveManager& ) {}
     QOpenGLShader *vertexShader;
     QOpenGLShader *fragmentShader;
     QOpenGLShaderProgram *program;

@@ -430,21 +430,12 @@ void BaseScene3D::updateXScaleValues()
     updateXScaleValues(fScalesSettings[slX].start, fScalesSettings[slX].start + fScalesSettings[slX].length, fScalesSettings[slX].step, fScalesSettings[slX].precision);
 }
 
-BaseScene3D::BaseScene3D(QWidget* pwgt) : QOpenGLWidget(pwgt), fSettings("view3DSettings", QStringLiteral("3D view settings")), fScaleFont("Arial",10)
-{
-    xRotate = -45;
-    yRotate = 0;
-    zRotate = 45;
-    zTransl = 0;
-    nScale = 1;
-    xTransl = 0;
-    yTransl = 0;
-    rBut = false;
-    zCam = -6;
+BaseScene3D::BaseScene3D(QWidget* pwgt) : QOpenGLWidget(pwgt), fSettings("view3DSettings", QStringLiteral("3D view settings")), fScaleFont("Arial",10),
+	xRotate(-45), yRotate(0), zRotate(45), zTransl(0), nScale(1), xTransl(0), yTransl(0), zCam(-6), axisXStart(-3.0f), axisXEnd(3.0f)
+{    
+    rBut = false;    
     light = false;
     fSmooth = false;
-    axisXStart = -3.0f;
-    axisXEnd = 3.0f;
     pManager = nullptr;
     fArrowX = nullptr;
     fMoveMode = mmObjectMode;
@@ -562,7 +553,7 @@ void BaseScene3D::initializeGL() // инициализация
        pManager = new PrimitiveManager();
        pManager->setShaders(":/BaseShaders/Lib/base_vsh.vert", ":/BaseShaders/Lib/base_fsh.frag");
 
-       fArrowX = (PrimitiveSimpleArrow *)pManager->addSimpleArrow(6,  axisXEnd - axisXStart, 0.20f, 0.05f, QVector3D(1,0,0));
+       fArrowX = dynamic_cast<PrimitiveSimpleArrow*>(pManager->addSimpleArrow(6,  axisXEnd - axisXStart, 0.20f, 0.05f, QVector3D(1,0,0)));
        fArrowX->setPos(QVector3D(axisXStart,0,0));
        fArrowX->setColor(Qt::gray);
 
@@ -663,7 +654,7 @@ void BaseScene3D::mouseMoveEvent(QMouseEvent* pe)
 
 void BaseScene3D::wheelEvent(QWheelEvent* pe)
 {
-    int delta = pe->modifiers() & Qt::ControlModifier ? 10 : 1;
+    int delta = (pe->modifiers() & Qt::ControlModifier) ? 10 : 1;
 
    if (pe->delta() > 0)
        zCam = zCam + 0.10 * delta;
@@ -936,7 +927,6 @@ void BaseScene3D::drawScales(const QMatrix4x4 &pvmMatrix)
     Q_UNUSED(pvmMatrix);
 
     bool drawPanels = true;
-    bool drawLines = true;
 
     float zRot = normalizeAngle(zRotate);
     float xRot = normalizeAngle(xRotate);
@@ -950,7 +940,7 @@ void BaseScene3D::drawScales(const QMatrix4x4 &pvmMatrix)
     float zMin = qMin(fSpaceData.z, fSpaceData.z + fSpaceData.zLength);
     float zMax = qMax(fSpaceData.z, fSpaceData.z + fSpaceData.zLength);
 
-    if (drawLines) {
+    { //drawLines
         glBegin(GL_LINES);
         glLineWidth(1);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -1669,9 +1659,9 @@ void BaseScene3D::renderText(float x, float y, float z, QString text, QFont &fon
         QPainterPath path;
         path.addText(QPointF(0, 0), font, text);
         QList<QPolygonF> poly = path.toSubpathPolygons();
-        for (QList<QPolygonF>::iterator i = poly.begin(); i != poly.end(); i++){
+        for (QList<QPolygonF>::iterator i = poly.begin(); i != poly.end(); ++i){
             glBegin(GL_LINE_LOOP);
-            for (QPolygonF::iterator p = (*i).begin(); p != i->end(); p++)
+            for (QPolygonF::iterator p = (*i).begin(); p != i->end(); ++p)
                 glVertex3f(p->rx()*0.1f, -p->ry()*0.1f, 0);
             glEnd();
         }

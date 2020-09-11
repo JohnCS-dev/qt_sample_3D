@@ -55,9 +55,8 @@ VariantEditor::VariantEditor(QString valueName, QVariant value, void *source) : 
     }
 }
 
-FontVariantEditor::FontVariantEditor(QString valueName, QVariant value, void *source) : VariantEditor(valueName, value, source)
-{
-    fFont = value.value<QFont>();
+FontVariantEditor::FontVariantEditor(QString valueName, QVariant value, void *source) : VariantEditor(valueName, value, source), fFont(value.value<QFont>())
+{    
     label = new QLabel(QString("%1, %2").arg(fFont.family()).arg(fFont.pointSize()));
     QPushButton *b = new QPushButton("...");
     b->setMaximumHeight(20);
@@ -86,9 +85,8 @@ void FontVariantEditor::showFontDialog()
     }
 }
 
-ColorVariantEditor::ColorVariantEditor(QString valueName, QVariant value, void *source) : VariantEditor(valueName, value, source)
-{
-    fColor = value.value<QColor>();
+ColorVariantEditor::ColorVariantEditor(QString valueName, QVariant value, void *source) : VariantEditor(valueName, value, source), fColor(value.value<QColor>())
+{    
     label = new QLabel();
     label->setFrameShape(QFrame::Box);
     QPixmap pix(36,18);
