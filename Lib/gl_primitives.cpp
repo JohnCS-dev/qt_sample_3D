@@ -388,7 +388,7 @@ void PrimitiveSimpleArrow::setLength(float length)
     buf->z = 0;
 }
 
-PrimitiveManager::PrimitiveManager() : instanceCount(1)
+PrimitiveManager::PrimitiveManager()
 {
     vertexShader = new QOpenGLShader(QOpenGLShader::Vertex);
     fragmentShader = new QOpenGLShader(QOpenGLShader::Fragment);
@@ -397,17 +397,16 @@ PrimitiveManager::PrimitiveManager() : instanceCount(1)
 
 PrimitiveManager::PrimitiveManager(const PrimitiveManager &pm)
 {
-    instanceCount++;
-    primitives = pm.primitives;
-    vertexShader = pm.vertexShader;
-    fragmentShader = pm.fragmentShader;
-    program = pm.program;
+    vertexShader = new QOpenGLShader(QOpenGLShader::Vertex);
+    fragmentShader = new QOpenGLShader(QOpenGLShader::Fragment);
+    program = new QOpenGLShaderProgram(nullptr);
+    compileShaders(pm.vertexShader->sourceCode(), pm.fragmentShader->sourceCode());
+//    primitives = pm.primitives;
+
 }
 
 PrimitiveManager::~PrimitiveManager()
 {
-    if (--instanceCount)
-        return;
     for (int i = 0; i < primitives.count(); i++)
         delete primitives[i];
 
@@ -416,17 +415,18 @@ PrimitiveManager::~PrimitiveManager()
     delete program;
 }
 
-void PrimitiveManager::setShaders(QString vertexShaderPath, QString fragmentShaderPath)
+void PrimitiveManager::compileShaders(QString vertexShaderPath, QString fragmentShaderPath)
 {
     vertexShader->compileSourceFile(vertexShaderPath);
     fragmentShader->compileSourceFile(fragmentShaderPath);
+    linkShaders();
+}
 
-    qDebug() << "VertexShader:" << vertexShader->log();
-    qDebug() << "FragmentShader:" << fragmentShader->log();
-
-    program->addShader(vertexShader);
-    program->addShader(fragmentShader);
-    program->link();
+void PrimitiveManager::compileShaders(QByteArray &vertexShaderCode, QByteArray &fragmentShaderCode)
+{
+    vertexShader->compileSourceCode(vertexShaderCode);
+    fragmentShader->compileSourceCode(fragmentShaderCode);
+    linkShaders();
 }
 
 void PrimitiveManager::drawPrimitives(const QMatrix4x4 &pmvMatrix)
@@ -470,4 +470,14 @@ Primitive *PrimitiveManager::addSimpleArrow(const int segments, const float heig
     Primitive *newSimpleArrow = new PrimitiveSimpleArrow(segments, height, arrowHeight, radius, direction);
     primitives.append(newSimpleArrow);
     return newSimpleArrow;
+}
+
+void PrimitiveManager::linkShaders()
+{
+    qDebug() << "VertexShader:" << vertexShader->log();
+    qDebug() << "FragmentShader:" << fragmentShader->log();
+
+    program->addShader(vertexShader);
+    program->addShader(fragmentShader);
+    program->link();
 }

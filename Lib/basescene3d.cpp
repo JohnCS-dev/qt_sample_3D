@@ -551,7 +551,7 @@ void BaseScene3D::initializeGL() // инициализация
 
    if (fShaderAvailable && fVertexBufferAvailable) {
        pManager = new PrimitiveManager();
-       pManager->setShaders(":/BaseShaders/Lib/base_vsh.vert", ":/BaseShaders/Lib/base_fsh.frag");
+       pManager->compileShaders(":/BaseShaders/Lib/base_vsh.vert", ":/BaseShaders/Lib/base_fsh.frag");
 
        fArrowX = dynamic_cast<PrimitiveSimpleArrow*>(pManager->addSimpleArrow(6,  axisXEnd - axisXStart, 0.20f, 0.05f, QVector3D(1,0,0)));
        fArrowX->setPos(QVector3D(axisXStart,0,0));
