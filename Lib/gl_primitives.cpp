@@ -84,7 +84,7 @@ PrimitiveSphere::PrimitiveSphere(const int segments, const float radiusX, const 
     const float feStep = 2.0f * 3.1415926f / segments;
     float fi = fiStep;
     float fe = 0;
-    GLfloat3 *buf = (GLfloat3 *)points;
+    GLfloat3 *buf = reinterpret_cast<GLfloat3*>(points);
     buf->x = 0;
     buf->y = 0;
     buf->z = radiusZ;

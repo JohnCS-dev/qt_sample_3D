@@ -926,8 +926,6 @@ void BaseScene3D::drawScales(const QMatrix4x4 &pvmMatrix)
 {
     Q_UNUSED(pvmMatrix);
 
-    bool drawPanels = true;
-
     float zRot = normalizeAngle(zRotate);
     float xRot = normalizeAngle(xRotate);
 
@@ -1045,7 +1043,7 @@ void BaseScene3D::drawScales(const QMatrix4x4 &pvmMatrix)
     }
 
 
-    if (drawPanels && xScaleTextureRight) {
+    if (xScaleTextureRight) {
         glEnable(GL_TEXTURE_2D);
         glShadeModel(GL_SMOOTH/*GL_FLAT*/);
         glEnable(GL_BLEND);
