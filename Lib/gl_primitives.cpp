@@ -176,7 +176,7 @@ PrimitiveCone::PrimitiveCone(const int segments, const float height, const float
     points = new GLfloat[pointCount * 3];
     const float fiStep = 2.0f * 3.1415926f / segments;
     float fi = 0;
-    GLfloat3 *buf = (GLfloat3 *)points;
+    GLfloat3 *buf = reinterpret_cast<GLfloat3*>(points);
     buf->x = 0;
     buf->y = 0;
     buf->z = height;
@@ -235,7 +235,7 @@ PrimitiveCylinder::PrimitiveCylinder(const int segments, const float height, con
     points = new GLfloat[pointCount * 3];
     const float fiStep = 2.0f * 3.1415926f / segments;
     float fi = 0;
-    GLfloat3 *buf = (GLfloat3 *)points;
+    GLfloat3 *buf = reinterpret_cast<GLfloat3*>(points);
     buf->x = 0;
     buf->y = 0;
     buf->z = height;
@@ -325,7 +325,7 @@ PrimitiveSimpleArrow::PrimitiveSimpleArrow(const int segments, const float heigh
     points = new GLfloat[pointCount * 3];
     const float fiStep = 2.0f * 3.1415926f / segments;
     float fi = 0;
-    GLfloat3 *buf = (GLfloat3 *)points;
+    GLfloat3 *buf = reinterpret_cast<GLfloat3*>(points);
     buf->x = 0;
     buf->y = 0;
     buf->z = height;
@@ -372,7 +372,7 @@ PrimitiveSimpleArrow::PrimitiveSimpleArrow(const int segments, const float heigh
 
 void PrimitiveSimpleArrow::setLength(float length)
 {
-    GLfloat3 *buf = (GLfloat3 *)points;
+    GLfloat3 *buf = reinterpret_cast<GLfloat3*>(points);
     buf->z = length;
     buf++;
     buf->z = length - fArrowLenth;
