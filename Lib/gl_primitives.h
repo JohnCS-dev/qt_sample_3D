@@ -93,6 +93,7 @@ class PrimitiveManager
 {
 public:
     PrimitiveManager();
+    PrimitiveManager( const PrimitiveManager& pm);
     ~PrimitiveManager();
     void setShaders(QString vertexShaderPath, QString fragmentShaderPath);
     void drawPrimitives(const QMatrix4x4 &pmvMatrix);
@@ -103,12 +104,13 @@ public:
     Primitive * addSimpleArrow(const int segments, const float height, const float arrowHeight, const float radius, QVector3D direction = QVector3D(0.0f, 0.0f, 1.0f));
 
 private:
-    PrimitiveManager( const PrimitiveManager& ) {}
+
     QOpenGLShader *vertexShader;
     QOpenGLShader *fragmentShader;
     QOpenGLShaderProgram *program;
 
     QList<Primitive*> primitives;
+    int instanceCount;
 };
 
 #endif // GL_PRIMITIVES_H

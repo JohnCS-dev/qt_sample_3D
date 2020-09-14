@@ -388,15 +388,26 @@ void PrimitiveSimpleArrow::setLength(float length)
     buf->z = 0;
 }
 
-PrimitiveManager::PrimitiveManager()
+PrimitiveManager::PrimitiveManager() : instanceCount(1)
 {
     vertexShader = new QOpenGLShader(QOpenGLShader::Vertex);
     fragmentShader = new QOpenGLShader(QOpenGLShader::Fragment);
     program = new QOpenGLShaderProgram(nullptr);
 }
 
+PrimitiveManager::PrimitiveManager(const PrimitiveManager &pm)
+{
+    instanceCount++;
+    primitives = pm.primitives;
+    vertexShader = pm.vertexShader;
+    fragmentShader = pm.fragmentShader;
+    program = pm.program;
+}
+
 PrimitiveManager::~PrimitiveManager()
 {
+    if (--instanceCount)
+        return;
     for (int i = 0; i < primitives.count(); i++)
         delete primitives[i];
 
